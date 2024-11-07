@@ -1,18 +1,8 @@
 import { defineStore } from 'pinia'
 
-interface IMenuItemProps {
-  path: string
-  title: string
-}
-
-interface IMenuProps {
-  noTabList: string[]
-  tabItems: IMenuItemProps[]
-  activeTab: string
-}
 
 export const useMenuStore = defineStore('menu', {
-  state: (): IMenuProps => {
+  state: () => {
     return {
       noTabList: ['/', '/home', '/404'],
       tabItems: [],
@@ -29,10 +19,10 @@ export const useMenuStore = defineStore('menu', {
     }
   },
   actions: {
-    addTab(data: IMenuItemProps) {
+    addTab(data) {
       this.tabItems.push(data)
     },
-    removeTab(tab: string) {
+    removeTab(tab) {
       let index = 0
       for (const item of this.tabItems) {
         if (item.path === tab) {
@@ -45,7 +35,7 @@ export const useMenuStore = defineStore('menu', {
     clearTab() {
       this.tabItems = []
     },
-    setActiveTab(tab: string) {
+    setActiveTab(tab) {
       this.activeTab = tab
     }
   }

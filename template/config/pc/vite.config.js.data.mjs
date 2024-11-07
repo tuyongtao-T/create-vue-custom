@@ -5,7 +5,7 @@ export default function getData({ oldData }) {
     initializer: `Components({
       include: [/\.tsx$/, /\.vue$/, /\.vue\?vue/],
       // 生产环境按需引入
-      resolvers: import.meta.env.MODE === 'production' ? ElementPlusResolver() : undefined
+      resolvers: command === 'build' ? ElementPlusResolver() : undefined
     })`,
   },
   {

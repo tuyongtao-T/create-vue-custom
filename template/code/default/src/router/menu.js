@@ -1,10 +1,3 @@
-/*
- * @Author: tuyongtao1
- * @Date: 2024-01-30 21:13:27
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-26 17:41:44
- * @Description:
- */
 
 export const menuRoutes = [
   {

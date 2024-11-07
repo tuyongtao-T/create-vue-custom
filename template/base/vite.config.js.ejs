@@ -86,7 +86,14 @@ export default defineConfig(({ command, mode }) => {
           }
         ]
       },
-      preprocessorOptions: {}
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler', 
+          importers: [
+            // ...
+          ],
+        },
+      }
     },
     server: {
       host: 'yongtao-custom.com',

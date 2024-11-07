@@ -236,6 +236,11 @@ async function init() {
       'utf-8',
     )
   }
+  if (isH5) {
+    render('config/h5')
+  }else {
+    render('config/pc')
+  }
 
   
 

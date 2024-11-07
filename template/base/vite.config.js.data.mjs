@@ -17,7 +17,7 @@ export default function getData() {
         initializer: `AutoImport({
           include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
           dts: true,
-          imports: ['vue', 'vue-router'],
+          imports: ['vue', 'vue-router', 'pinia'],
         }),`,
       },
       {
