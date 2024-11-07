@@ -12,19 +12,28 @@ interface CustomOptions {
   cancelDuplicateDelay?: number;
 }
 
+type Result<T = any> = {
+  code: number
+  message: string
+  data: T
+}
+
 // HttpService类
 class HttpService {
   static defaultAxiosOptions: AxiosRequestConfig = {
     baseURL: '',
-    timeout: 10000,
+    timeout: 1000 * 60,
   };
 
   static defaultCustomOptions: CustomOptions = {
     retry: 0,
-    retryDelay: 1000,
-    loadingCallback: undefined,
+    retryDelay: 3000,
+    loadingCallback: {
+      onStart: () => {},
+      onEnd: () => {}
+    },
     cancelDuplicate: false,
-    cancelDuplicateDelay: 0,
+    cancelDuplicateDelay: 1000,
   };
 
   private axiosOptions: AxiosRequestConfig;
@@ -66,16 +75,16 @@ class HttpService {
     this.axiosInstance.interceptors.response.use(onFulfilled, onRejected);
   }
 
-  async request(config: AxiosRequestConfig, customOptions: CustomOptions = {}): Promise<AxiosResponse> {
+  async request<T>(config: AxiosRequestConfig, customOptions: CustomOptions = {}): Promise<Result<T>> {
     const finalCustomOptions = { ...this.customOptions, ...customOptions };
-    const { retry, retryDelay, loadingCallback, cancelDuplicate, cancelDuplicateDelay } = finalCustomOptions;
+    const { retry , retryDelay, loadingCallback, cancelDuplicate, cancelDuplicateDelay } = finalCustomOptions;
 
     const requestKey = `${config.method}:${config.url}`;
     if (cancelDuplicate && this.pendingRequests.has(requestKey)) {
       const cancelTokenSource = this.pendingRequests.get(requestKey);
       cancelTokenSource?.cancel('Duplicate request canceled');
       this.pendingRequests.delete(requestKey);
-      await this.delay(cancelDuplicateDelay);
+      await this.delay(cancelDuplicateDelay as number);
     }
 
     const cancelTokenSource = axios.CancelToken.source();
@@ -92,9 +101,9 @@ class HttpService {
       } catch (error) {
         if (axios.isCancel(error)) {
           throw error;
-        } else if (retries < retry) {
+        } else if (retry && retries < retry) {
           retries++;
-          await this.delay(retryDelay);
+          await this.delay(retryDelay as number);
           return executeRequest();
         } else {
           this.pendingRequests.delete(requestKey);
@@ -107,7 +116,7 @@ class HttpService {
     return executeRequest();
   }
 
-  delay(ms: number | undefined = 3000): Promise<void> {
+  private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 

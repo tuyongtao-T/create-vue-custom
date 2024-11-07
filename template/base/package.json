@@ -45,6 +45,7 @@
     "eslint-plugin-vue": "^9.9.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
+    "mockjs": "^1.1.0",
     "sass-embedded": "^1.80.6",
     "stylelint": "^16.10.0",
     "stylelint-config-html": "^1.1.0",
@@ -58,7 +59,8 @@
     "unplugin-vue-define-options": "^1.2.4",
     "rollup-plugin-visualizer": "^5.9.0",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-html": "^3.2.0"
+    "vite-plugin-html": "^3.2.0",
+    "vite-plugin-mock": "^3.0.2"
   },
   "repository": {
     "type": "git",

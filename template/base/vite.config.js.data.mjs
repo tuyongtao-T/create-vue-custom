@@ -46,7 +46,7 @@ export default function getData() {
         importer: "import { createHtmlPlugin } from 'vite-plugin-html'",
         initializer: `
           createHtmlPlugin({
-            minify: true,
+            minify: isBuild,
             inject: {
               data: {
                 title: VITE_APP_TITLE
