@@ -7,24 +7,25 @@ import { defineConfig, loadEnv } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig(({ command, mode }) => {
-  const { VITE_BASE_URL, VITE_PROXY_URL } = loadEnv(mode, CWD)
+  const CWD = process.cwd()
+  const { VITE_BASE_URL, VITE_PROXY_URL, VITE_APP_TITLE } = loadEnv(mode, CWD)
   return {
     plugins: [
     <%_ for (const { initializer } of plugins) { _%>
       <%- initializer _%>,
     <%_ } _%>
-      // 开发环境完整引入element-plus
-      {
-        name: 'dev-auto-import-element-plus',
-        transform(code, id) {
-          if (import.meta.env.MODE !== 'production' && /src\/main.ts$/.test(id)) {
-            return {
-              code: `${code};import ElementPlus from 'element-plus';import 'element-plus/dist/index.css';app.use(ElementPlus);`,
-              map: null
-            }
+    // 开发环境完整引入element-plus
+    {
+      name: 'dev-auto-import-element-plus',
+      transform(code, id) {
+        if (command === 'serve' && /src\/main.ts$/.test(id)) {
+          return {
+            code: `${code};import ElementPlus from 'element-plus';import 'element-plus/dist/index.css';app.use(ElementPlus);`,
+            map: null
           }
         }
-      },
+      }
+    },
     ],
     resolve: {
       alias: {
@@ -85,13 +86,7 @@ export default defineConfig(({ command, mode }) => {
           }
         ]
       },
-      preprocessorOptions: {
-        less: {
-          charset: false,
-          additionalData: `@import "${resolve(__dirname, 'src/assets/styles/variables.less')}";`,
-          javascriptEnabled: true
-        }
-      }
+      preprocessorOptions: {}
     },
     server: {
       host: 'yongtao-custom.com',
