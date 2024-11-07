@@ -11,8 +11,6 @@ export default function renderEslint(
   rootDir,
   {
     needsTypeScript,
-    needsOxlint,
-    needsPrettier,
   },
 ) {
   const additionalConfigs = []
@@ -20,10 +18,10 @@ export default function renderEslint(
   const { pkg, files } = createESLintConfig({
     styleGuide: 'default',
     hasTypeScript: needsTypeScript,
-    needsOxlint,
+    needsOxlint: false,
     // Theoretically, we could add Prettier without requring ESLint.
     // But it doesn't seem to be a good practice, so we just let createESLintConfig handle it.
-    needsPrettier,
+    needsPrettier: true,
     additionalConfigs,
   })
 

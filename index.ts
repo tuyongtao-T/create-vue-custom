@@ -68,32 +68,14 @@ async function init() {
       : banners.defaultBanner,
   )
   console.log()
-
   const cwd = process.cwd()
-  // possible options:
-  // --default
-  // --typescript / --ts
-  // --jsx
-  // --router / --vue-router
-  // --pinia
-  // --with-tests / --tests (equals to `--vitest --cypress`)
-  // --vitest
-  // --cypress
-  // --nightwatch
-  // --playwright
-  // --eslint
-  // --eslint-with-prettier (only support prettier through eslint for simplicity)
-  // --vue-devtools / --devtools
-  // --force (for force overwriting)
 
   const args = process.argv.slice(2)
 
   // alias is not supported by parseArgs
   const options = {
-    typescript: { type: 'boolean' },
     ts: { type: 'boolean' },
-    'vue-router': { type: 'boolean' },
-    router: { type: 'boolean' },
+    h5: { type: 'boolean' },
   } as const
 
   const { values: argv, positionals } = parseArgs({
@@ -106,12 +88,8 @@ async function init() {
   const isFeatureFlagsUsed =
     typeof (
       argv.default ??
-      (argv.ts || argv.typescript) ??
-      argv.jsx ??
-      (argv.router || argv['vue-router']) ??
-      argv.pinia ??
-      argv.eslint ??
-      argv['eslint-with-prettier'] 
+      argv.ts ??
+      argv.h5
     ) === 'boolean'
 
   let targetDir = positionals[0]
@@ -126,29 +104,10 @@ async function init() {
     shouldOverwrite?: boolean
     packageName?: string
     needsTypeScript?: boolean
-    needsJsx?: boolean
-    needsRouter?: boolean
-    needsPinia?: boolean
-    needsEslint?: false | 'eslintOnly' | 'speedUpWithOxlint'
-    needsOxlint?: boolean
-    needsPrettier?: boolean
+    isH5?: boolean
   } = {}
 
   try {
-    // Prompts:
-    // - Project name:
-    //   - whether to overwrite the existing directory or not?
-    //   - enter a valid package name for package.json
-    // - Project language: JavaScript / TypeScript
-    // - Add JSX Support?
-    // - Install Vue Router for SPA development?
-    // - Install Pinia for state management?
-    // - Add Cypress for testing?
-    // - Add Nightwatch for testing?
-    // - Add Playwright for end-to-end testing?
-    // - Add ESLint for code quality?
-    // - Add Prettier for code formatting?
-    // - Add Vue DevTools 7 extension for debugging? (experimental)
     result = await prompts(
       [
         {
@@ -198,58 +157,9 @@ async function init() {
           inactive: language.defaultToggleOptions.inactive,
         },
         {
-          name: 'needsJsx',
+          name: 'isH5',
           type: () => (isFeatureFlagsUsed ? null : 'toggle'),
-          message: language.needsJsx.message,
-          initial: false,
-          active: language.defaultToggleOptions.active,
-          inactive: language.defaultToggleOptions.inactive,
-        },
-        {
-          name: 'needsRouter',
-          type: () => (isFeatureFlagsUsed ? null : 'toggle'),
-          message: language.needsRouter.message,
-          initial: false,
-          active: language.defaultToggleOptions.active,
-          inactive: language.defaultToggleOptions.inactive,
-        },
-        {
-          name: 'needsPinia',
-          type: () => (isFeatureFlagsUsed ? null : 'toggle'),
-          message: language.needsPinia.message,
-          initial: false,
-          active: language.defaultToggleOptions.active,
-          inactive: language.defaultToggleOptions.inactive,
-        },
-        {
-          name: 'needsEslint',
-          type: () => (isFeatureFlagsUsed ? null : 'select'),
-          message: language.needsEslint.message,
-          initial: 0,
-          choices: [
-            {
-              title: language.needsEslint.selectOptions.negative.title,
-              value: false,
-            },
-            {
-              title: language.needsEslint.selectOptions.eslintOnly.title,
-              value: 'eslintOnly',
-            },
-            {
-              title: language.needsEslint.selectOptions.speedUpWithOxlint.title,
-              value: 'speedUpWithOxlint',
-            },
-          ],
-        },
-        {
-          name: 'needsPrettier',
-          type: (prev, values) => {
-            if (isFeatureFlagsUsed || !values.needsEslint) {
-              return null
-            }
-            return 'toggle'
-          },
-          message: language.needsPrettier.message,
+          message: language.isH5.message,
           initial: false,
           active: language.defaultToggleOptions.active,
           inactive: language.defaultToggleOptions.inactive,
@@ -272,15 +182,9 @@ async function init() {
     projectName,
     packageName = projectName ?? defaultProjectName,
     shouldOverwrite = argv.force,
-    needsJsx = argv.jsx,
-    needsTypeScript = argv.ts || argv.typescript,
-    needsRouter = argv.router || argv['vue-router'],
-    needsPinia = argv.pinia,
-    needsPrettier = argv['eslint-with-prettier'],
+    needsTypeScript = argv.ts,
+    isH5 = argv.h5,
   } = result
-
-  const needsEslint = Boolean(argv.eslint || argv['eslint-with-prettier'] || result.needsEslint)
-  const needsOxlint = result.needsEslint === 'speedUpWithOxlint'
 
 
   const root = path.join(cwd, targetDir)
@@ -296,10 +200,7 @@ async function init() {
   const pkg = { name: packageName, version: '0.0.0' }
   fs.writeFileSync(path.resolve(root, 'package.json'), JSON.stringify(pkg, null, 2))
 
-  // todo:
-  // work around the esbuild issue that `import.meta.url` cannot be correctly transpiled
-  // when bundling for node and the format is cjs
-  // const templateRoot = new URL('./template', import.meta.url).pathname
+
   const templateRoot = path.resolve(__dirname, 'template')
   const callbacks = []
   const render = function render(templateName) {
@@ -310,18 +211,8 @@ async function init() {
   render('base')
 
   // Add configs.
-  if (needsJsx) {
-    render('config/jsx')
-  }
-  if (needsRouter) {
-    render('config/router')
-  }
-  if (needsPinia) {
-    render('config/pinia')
-  }
   if (needsTypeScript) {
     render('config/typescript')
-
     // Render tsconfigs
     render('tsconfig/base')
     // The content of the root `tsconfig.json` is a bit complicated,
@@ -346,37 +237,19 @@ async function init() {
     )
   }
 
-  // Render ESLint config
-  if (needsEslint) {
-    renderEslint(root, {
-      needsTypeScript,
-      needsOxlint,
-      needsPrettier,
-    })
-    render('config/eslint')
-  }
-
-  if (needsPrettier) {
-    render('config/prettier')
-  }
+  
 
   // Render code template.
   // prettier-ignore
-  const codeTemplate =
-    (needsTypeScript ? 'typescript-' : '') +
-    (needsRouter ? 'router' : 'default')
+  const codeTemplate = needsTypeScript ? 'typescript' : 'default'
   render(`code/${codeTemplate}`)
 
-  // Render entry file (main.js/ts).
-  if (needsPinia && needsRouter) {
-    render('entry/router-and-pinia')
-  } else if (needsPinia) {
-    render('entry/pinia')
-  } else if (needsRouter) {
-    render('entry/router')
+  if (isH5) {
+    render('entry/h5')
   } else {
-    render('entry/default')
+    render('entry/pc')
   }
+
 
   // An external data store for callbacks to share data
   const dataStore = {}
@@ -401,21 +274,8 @@ async function init() {
     },
   )
 
-  // Cleanup.
-
-  // We try to share as many files between TypeScript and JavaScript as possible.
-  // If that's not possible, we put `.ts` version alongside the `.js` one in the templates.
-  // So after all the templates are rendered, we need to clean up the redundant files.
-  // (Currently it's only `cypress/plugin/index.ts`, but we might add more in the future.)
-  // (Or, we might completely get rid of the plugins folder as Cypress 10 supports `cypress.config.ts`)
 
   if (needsTypeScript) {
-    // Convert the JavaScript template to the TypeScript
-    // Check all the remaining `.js` files:
-    //   - If the corresponding TypeScript version already exists, remove the `.js` version.
-    //   - Otherwise, rename the `.js` file to `.ts`
-    // Remove `jsconfig.json`, because we already have tsconfig.json
-    // `jsconfig.json` is not reused, because we use solution-style `tsconfig`s, which are much more complicated.
     preOrderDirectoryTraverse(
       root,
       () => {},
@@ -467,8 +327,6 @@ async function init() {
     generateReadme({
       projectName: result.projectName ?? result.packageName ?? defaultProjectName,
       packageManager,
-      needsTypeScript,
-      needsEslint,
     }),
   )
 
@@ -480,9 +338,7 @@ async function init() {
     )
   }
   console.log(`  ${bold(green(getCommand(packageManager, 'install')))}`)
-  if (needsPrettier) {
-    console.log(`  ${bold(green(getCommand(packageManager, 'format')))}`)
-  }
+  console.log(`  ${bold(green(getCommand(packageManager, 'format')))}`)
   console.log(`  ${bold(green(getCommand(packageManager, 'dev')))}`)
   console.log()
 }

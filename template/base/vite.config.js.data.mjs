@@ -7,28 +7,18 @@ export default function getData() {
         initializer: 'vue()',
       },
       {
+        name: 'vueJsx',
+        importer: "import vueJsx from '@vitejs/plugin-vue-jsx'",
+        initializer: 'vueJsx()',
+      },
+      {
         id: 'autoImport',
         importer: "import AutoImport from 'unplugin-auto-import/vite'",
         initializer: `AutoImport({
           include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
           dts: true,
           imports: ['vue', 'vue-router'],
-          resolvers: [ElementPlusResolver()]
         }),`,
-      },
-      {
-        id: 'components',
-        importer: "import Components from 'unplugin-vue-components/vite'",
-        initializer: `Components({
-          include: [/\.tsx$/, /\.vue$/, /\.vue\?vue/],
-          // 生产环境按需引入
-          resolvers: import.meta.env.MODE === 'production' ? ElementPlusResolver() : undefined
-        })`,
-      },
-      {
-        id: 'elementPlusResolver',
-        importer: "import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'",
-        initializer: '',
       },
       {
         id: 'viteCompression',

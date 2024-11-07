@@ -11,8 +11,8 @@ const sfcTypeSupportDoc = [
 export default function generateReadme({
   projectName,
   packageManager,
-  needsTypeScript,
-  needsEslint,
+  needsTypeScript = true,
+  needsEslint = true,
 }) {
   const commandFor = (scriptName: string, args?: string) =>
     getCommand(packageManager, scriptName, args)

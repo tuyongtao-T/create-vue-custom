@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "element-plus": "^2.3.0",
+    "@element-plus/icons-vue": "^2.1.0"
+  },
+  "devDependencies": {
+  }
+}

@@ -22,11 +22,7 @@ interface Language {
   shouldOverwrite: LanguageItem
   packageName: LanguageItem
   needsTypeScript: LanguageItem
-  needsJsx: LanguageItem
-  needsRouter: LanguageItem
-  needsPinia: LanguageItem
-  needsEslint: LanguageItem
-  needsPrettier: LanguageItem
+  isH5: LanguageItem
   errors: {
     operationCancelled: string
   }
