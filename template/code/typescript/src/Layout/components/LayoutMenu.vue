@@ -1,5 +1,17 @@
+<!--
+ * @Author: tuyongtao1
+ * @Date: 2023-05-24 16:21:07
+ * @LastEditors: tuyongtao1
+ * @LastEditTime: 2024-02-02 10:55:33
+ * @Description: 
+-->
 <template>
-  <el-menu :default-active="route.path" :router="true" :collapse="isCollapse" class="aside-menu">
+  <el-menu
+    :default-active="route.path"
+    :router="true"
+    :collapse="isCollapse"
+    class="aside-menu"
+  >
     <aside-menu-item :menu-list="menuList"></aside-menu-item>
   </el-menu>
 </template>

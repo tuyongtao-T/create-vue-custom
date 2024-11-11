@@ -8,6 +8,7 @@ export default defineConfig({
     ['wh-full', 'w-full h-full'],
     ['f-c-c', 'flex justify-center items-center'],
     ['f-b-c', 'flex justify-between items-center'],
+    ['f-e-c', 'flex justify-evenly items-center'],
     ['f-s-c', 'flex justify-start items-center'],
     ['flex-col', 'flex flex-col'],
     ['absolute-lt', 'absolute left-0 top-0'],
@@ -16,12 +17,16 @@ export default defineConfig({
     ['absolute-rb', 'absolute right-0 bottom-0'],
     ['absolute-center', 'absolute-lt f-c-c wh-full'],
     ['text-title', 'f-b-c font-700 mb-16px text-16px'],
-    ['text-ellipsis', 'truncate']
+    ['text-ellipsis', 'truncate'],
   ],
-  rules: [
-    [/^bc-(.+)$/, ([, color]) => ({ 'border-color': `#${color}` })],
-    [/^bso-(.+)$/, ([, width]) => ({ 'border-width': `${width}`, 'border-style': 'solid' })],
-    [/^bda-(.+)$/, ([, width]) => ({ 'border-width': `${width}`, 'border-style': 'dashed' })],
-    ['card-shadow', { 'box-shadow': '0 1px 2px -2px #00000029, 0 3px 6px #0000001f, 0 5px 12px 4px #00000017' }]
-  ]
+  theme: {
+    breakpoints: {
+      xs: '480px',
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+  },
 })

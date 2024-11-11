@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
-    "element-plus": "^2.8.7"
+    "element-plus": "^2.8.7",
+    "lodash-es": "^4.17.21",
+    "echarts": "^5.5.1"
   },
   "devDependencies": {
   }

@@ -6,7 +6,7 @@
       </el-scrollbar>
       <el-container class="main-container">
         <LayoutHeader />
-        <LayoutContent />
+        <MainContent />
       </el-container>
     </el-container>
   </div>
@@ -15,13 +15,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LayoutMenu from './components/LayoutMenu.vue'
-import LayoutContent from './components/LayoutContent.vue'
+import MainContent from './components/MainContent.vue'
 import LayoutHeader from './components/LayoutHeader.vue'
 
 export default defineComponent({
   components: {
     LayoutMenu,
-    LayoutContent,
+    MainContent,
     LayoutHeader
   },
   setup() {
@@ -39,7 +39,7 @@ export default defineComponent({
 
   .main-container {
     flex-direction: column;
-    margin: 0 10px;
+    background-color: rgb(228 228 231 / 0.4);
   }
 }
 </style>
