@@ -1,26 +1,22 @@
 {
   "name": "create-vue-custom",
-  "version": "0.0.1",
+  "version": "0.0.10",
   "description": "🛠️ The recommended way to start a Vite-powered Vue project",
   "type": "module",
   "bin": {
-    "create-vue-custom": "outfile.cjs"
+    "custom-cli": "outfile.cjs"
   },
   "main": "index.ts",
   "engines": {
     "node": ">=v18.3.0"
   },
   "files": [
-    "outfile.cjs",
-    "template"
+    "outfile.cjs"
   ],
   "scripts": {
     "prepare": "husky",
     "format": "prettier --write .",
-    "build": "zx ./scripts/build.mjs",
-    "snapshot": "zx ./scripts/snapshot.mjs",
-    "pretest": "pnpm run build && pnpm run snapshot",
-    "prepublishOnly": "zx ./scripts/prepublish.mjs"
+    "build": "zx ./scripts/build.mjs"
   },
   "keywords": [],
   "author": "",
@@ -29,25 +25,11 @@
     "node": "18.3.0"
   },
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.4",
-    "@types/eslint": "^9.6.1",
-    "@types/node": "^20.17.6",
-    "@types/prompts": "^2.4.9",
-    "@vue/create-eslint-config": "^0.6.0",
-    "@vue/tsconfig": "^0.5.1",
-    "ejs": "^3.1.10",
     "esbuild": "^0.24.0",
-    "esbuild-plugin-license": "^1.2.3",
     "husky": "^9.1.6",
     "kleur": "^4.1.5",
-    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "prompts": "^2.4.2",
     "zx": "^8.2.0"
-  },
-  "lint-staged": {
-    "*.{js,ts,vue,json}": [
-      "prettier --write"
-    ]
   }
 }
